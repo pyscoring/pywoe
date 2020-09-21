@@ -5,12 +5,44 @@ Data model primitive building block tests. Mainly checks that validation works a
 
 import unittest
 
+from pywoe.constants import INFINITY
 from pywoe.data_models.base import Range
 from pywoe.data_models.feature import Feature
 from pywoe.data_models.woe import WoEBin
 
 
 class DataModelPrimitivesTests(unittest.TestCase):
+
+    def test_passing_no_argument_works(self):
+
+        Range(
+            categorical_indicators={"a", "b", "c"}
+        )
+
+    def test_passing_no_argument_does_not_work_right(self):
+
+        with self.assertRaises(ValueError):
+            Range(
+                numeric_range_end=1.,
+                categorical_indicators={"a", "b", "c"}
+            )
+
+    def test_passing_no_argument_does_not_work_left(self):
+
+        with self.assertRaises(ValueError):
+            Range(
+                numeric_range_start=1.,
+                categorical_indicators={"a", "b", "c"}
+            )
+
+    def test_passing_above_infinity_does_not_work(self):
+
+        with self.assertRaises(ValueError):
+            Range(
+                numeric_range_start=10.,
+                numeric_range_end=INFINITY + 1,
+                categorical_indicators={"a", "b", "c"}
+            )
 
     def test_range_rejects_invalid_numeric_range(self):
 

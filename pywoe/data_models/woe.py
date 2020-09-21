@@ -17,12 +17,36 @@ class WoEBin(object):
     A definition of the boundaries of a single bin.
     """
 
+    bin_event_count: int = attr.ib(
+        validator=attr.validators.instance_of(int),
+        converter=int
+    )
+    """
+    The number of event (e.g. bad loan outcome) instances in the bin.
+    """
+
+    bin_non_event_count: int = attr.ib(
+        validator=attr.validators.instance_of(int),
+        converter=int
+    )
+    """
+    The number of non-event (e.g. good loan outcome) instances in the bin.
+    """
+
     woe: float = attr.ib(
         validator=attr.validators.instance_of(float),
         converter=float
     )
     """
-    The Weight-of-Evidence value.
+    The Weight-of-Evidence value of the bin.
+    """
+
+    iv: float = attr.ib(
+        validator=attr.validators.instance_of(float),
+        converter=float
+    )
+    """
+    The Information Value of the bin.
     """
 
     bin: Range = attr.ib(
@@ -70,5 +94,3 @@ class WoESpec(object):
                 bin.bin for bin in self.bins
             ])
         )
-
-

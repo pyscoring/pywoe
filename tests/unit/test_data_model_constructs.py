@@ -64,7 +64,7 @@ class DataModelConstructTests(unittest.TestCase):
                     range=Range(
                         numeric_range_start=0.5,
                         numeric_range_end=2.5,
-                        categorical_indicators={"M", "C", "_", "X"}
+                        categorical_indicators={"M", "C", "_"}
                     )
                 ),
                 bins={
@@ -91,7 +91,7 @@ class DataModelConstructTests(unittest.TestCase):
                     range=Range(
                         numeric_range_start=0.5,
                         numeric_range_end=2.5,
-                        categorical_indicators={"M", "C", "_", "X"}
+                        categorical_indicators={"M", "C", "_"}
                     )
                 ),
                 bins={
@@ -117,7 +117,7 @@ class DataModelConstructTests(unittest.TestCase):
                     range=Range(
                         numeric_range_start=0.5,
                         numeric_range_end=2.5,
-                        categorical_indicators={"M", "C", "_", "X"}
+                        categorical_indicators={"M", "C", "_"}
                     )
                 ),
                 bins={

@@ -27,10 +27,10 @@ def check_validity_of_ranges(
     """
 
     min_numeric = min([
-        bin.numeric_range_start for bin in bin_ranges
+        bin.numeric_range_start for bin in bin_ranges if bin.numeric_range_start is not None
     ])
     max_numeric = max([
-        bin.numeric_range_end for bin in bin_ranges
+        bin.numeric_range_end for bin in bin_ranges if bin.numeric_range_end is not None
     ])
     all_chars = list(
         itertools.chain.from_iterable(
@@ -88,8 +88,12 @@ def _numeric_range_is_disjoint(
     :return: `True` if the range is disjoint, `False` otherwise
     """
 
-    bin_starts = sorted([bin.numeric_range_start for bin in bin_ranges])
-    bin_ends = sorted([bin.numeric_range_end for bin in bin_ranges])
+    bin_starts = sorted(
+        [bin.numeric_range_start for bin in bin_ranges if bin.numeric_range_start is not None]
+    )
+    bin_ends = sorted(
+        [bin.numeric_range_end for bin in bin_ranges if bin.numeric_range_end is not None]
+    )
 
     if len(bin_starts) <= 1:
         return False
