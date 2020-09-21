@@ -26,12 +26,21 @@ def check_validity_of_ranges(
     :raises: :any:`ValueError` in case the range is not valid
     """
 
-    min_numeric = min([
+    all_bin_starts = [
         bin.numeric_range_start for bin in bin_ranges if bin.numeric_range_start is not None
-    ])
-    max_numeric = max([
+    ]
+    all_bin_ends = [
         bin.numeric_range_end for bin in bin_ranges if bin.numeric_range_end is not None
-    ])
+    ]
+
+    if len(all_bin_starts) > 0 and len(all_bin_ends) > 0:
+        min_numeric = min(all_bin_starts)
+        max_numeric = max(all_bin_ends)
+
+    else:
+        min_numeric = feature.range.numeric_range_start
+        max_numeric = feature.range.numeric_range_end
+
     all_chars = list(
         itertools.chain.from_iterable(
             bin.categorical_indicators for bin in bin_ranges
@@ -39,19 +48,23 @@ def check_validity_of_ranges(
     )
     set_difference = feature.range.categorical_indicators - frozenset(all_chars)
 
-    if min_numeric > feature.range.numeric_range_start:
+    if abs(min_numeric - feature.range.numeric_range_start) > NUMERIC_ACCURACY:
         raise ValueError(
-            "The minimum numeric value for feature `{name}` is beyond the binning spec ({value}).".format(
-                name=feature.name,
-                value=min_numeric
+            "The minimum numeric value for feature `{name}` is well beyond the range startpoint ".format(
+                name=feature.name
+            ) + "({value1}, range startpoint {value2}).".format(
+                value1=min_numeric,
+                value2=feature.range.numeric_range_start
             )
         )
 
-    elif max_numeric < feature.range.numeric_range_end:
+    elif abs(max_numeric - feature.range.numeric_range_end) > NUMERIC_ACCURACY:
         raise ValueError(
-            "The maximum numeric value for feature `{name}` is beyond the binning spec ({value}).".format(
-                name=feature.name,
-                value=max_numeric
+            "The maximum numeric value for feature `{name}` is well beyond the range endpoint ".format(
+                name=feature.name
+            ) + "({value1}, range endpoint {value2}).".format(
+                value1=max_numeric,
+                value2=feature.range.numeric_range_end
             )
         )
 
@@ -118,5 +131,9 @@ def _categorical_value_intersection(
     :return: `True` if there is an intersection, `False` otherwise
     """
 
-    maximum_count = max(Counter(all_chars).values())
-    return maximum_count > 1
+    if len(all_chars) > 0:
+        maximum_count = max(Counter(all_chars).values())
+        return maximum_count > 1
+
+    else:
+        return False

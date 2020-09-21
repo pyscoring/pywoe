@@ -9,28 +9,10 @@ import numpy as np
 from typing import Dict, AnyStr, Type
 from sklearn.base import BaseEstimator, TransformerMixin
 from pywoe.data_models.woe import WoESpec, WoEBin
-from pywoe.data_models.base import Range
 from pywoe.feature_engineering.binning import AbstractBinner
 from pywoe.constants import NUMERIC_ACCURACY
+from pywoe.feature_engineering.utils import get_mask_from_range
 
-
-def _get_mask_from_range(ser: pd.Series, bin: Range) -> pd.Series:
-    """
-    Transforms a range object to a mask on a `pandas` Series.
-
-    :param ser: the `pandas` Series to be turned into a mask
-    :param bin: the range object that defines the range the mask should pick out
-    :return: a boolean mask to be applied to filter out just the bit of the dataframe that falls in
-             the range
-    """
-
-    if bin.numeric_range_start is not None:
-        return (
-                (ser > bin.numeric_range_start) & (ser <= bin.numeric_range_end)
-            ) | (ser.isin(bin.categorical_indicators))
-
-    else:
-        return ser.isin(bin.categorical_indicators)
 
 def _compute_woe(
         all_event_count: int,
@@ -125,7 +107,7 @@ class WoETransformer(BaseEstimator, TransformerMixin):
 
                 # Impute with the right WoE value
                 for bin in spec.bins:
-                    bin_mask = _get_mask_from_range(X[name], bin)
+                    bin_mask = get_mask_from_range(X[name], bin)
                     bin_event_count = event[bin_mask].sum()
                     bin_non_event_count = non_event[bin_mask].sum()
                     woe_bins.add(
@@ -173,6 +155,8 @@ class WoETransformer(BaseEstimator, TransformerMixin):
 
             # Impute with the right WoE value
             for woe_bin in spec.bins:
-                X_copy.loc[_get_mask_from_range(X[name], woe_bin.bin), name] = woe_bin.woe
+                X_copy.loc[get_mask_from_range(X[name], woe_bin.bin), name] = woe_bin.woe
 
+        print(self._woe_spec)
+        print(X_copy)
         return X_copy

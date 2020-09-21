@@ -190,6 +190,9 @@ class DataModelConstructTests(unittest.TestCase):
             bins={
                 WoEBin(
                     woe=1.3,
+                    bin_event_count=10,
+                    bin_non_event_count=100,
+                    iv=0.4,
                     bin=Range(
                         numeric_range_start=0.4,
                         numeric_range_end=1.5,
@@ -198,6 +201,9 @@ class DataModelConstructTests(unittest.TestCase):
                 ),
                 WoEBin(
                     woe=3.4,
+                    bin_event_count=10,
+                    bin_non_event_count=100,
+                    iv=0.4,
                     bin=Range(
                         numeric_range_start=1.5,
                         numeric_range_end=2.6,
@@ -222,6 +228,9 @@ class DataModelConstructTests(unittest.TestCase):
                 bins={
                     WoEBin(
                         woe=1.3,
+                        bin_event_count=10,
+                        bin_non_event_count=100,
+                        iv=0.4,
                         bin=Range(
                             numeric_range_start=0.4,
                             numeric_range_end=1.8,
@@ -230,6 +239,9 @@ class DataModelConstructTests(unittest.TestCase):
                     ),
                     WoEBin(
                         woe=3.4,
+                        bin_event_count=10,
+                        bin_non_event_count=100,
+                        iv=0.4,
                         bin=Range(
                             numeric_range_start=1.5,
                             numeric_range_end=2.6,

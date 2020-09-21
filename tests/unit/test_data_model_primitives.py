@@ -102,7 +102,10 @@ class DataModelPrimitivesTests(unittest.TestCase):
 
         with self.assertRaises(TypeError):
             WoEBin(
+                bin_event_count=10,
+                bin_non_event_count=100,
                 woe=None,
+                iv=0.4,
                 bin=Range(
                     numeric_range_start=10,
                     numeric_range_end=45,
@@ -115,6 +118,9 @@ class DataModelPrimitivesTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             WoEBin(
                 woe="abc",
+                bin_event_count=10,
+                bin_non_event_count=100,
+                iv=0.4,
                 bin=Range(
                     numeric_range_start=10,
                     numeric_range_end=45,
@@ -125,6 +131,9 @@ class DataModelPrimitivesTests(unittest.TestCase):
     def test_woe_bin_succeeds_with_numeric_value(self):
         WoEBin(
             woe="12",
+            bin_event_count=10,
+            bin_non_event_count=100,
+            iv=0.4,
             bin=Range(
                 numeric_range_start=10,
                 numeric_range_end=45,
@@ -137,6 +146,9 @@ class DataModelPrimitivesTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             WoEBin(
                 woe=12,
+                bin_event_count=10,
+                bin_non_event_count=100,
+                iv=0.4,
                 bin=Range(
                     numeric_range_start=10,
                     numeric_range_end=9,

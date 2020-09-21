@@ -23,7 +23,7 @@ class FeatureValidator(BaseEstimator, TransformerMixin):
 
     def __init__(
             self,
-            feature_spec: Dict[str, Feature] =  None
+            feature_spec: Dict[str, Feature] = None
     ):
         """
         Feature validator instantiation that can be used to load a serialised feature validator via set of
@@ -34,12 +34,12 @@ class FeatureValidator(BaseEstimator, TransformerMixin):
         """
 
         if feature_spec is not None:
-            self._feature_spec = feature_spec
+            self.feature_spec = feature_spec
 
         else:
-            self._feature_spec = dict()
+            self.feature_spec = None
 
-    def fit(self, X: pd.DataFrame, **kwargs):
+    def fit(self, X: pd.DataFrame, *args, **kwargs):
         """
         Determines data ranges in provided training data and builds a feature validation specification
         from that.
@@ -47,10 +47,11 @@ class FeatureValidator(BaseEstimator, TransformerMixin):
         :param X: the data to be used
         """
 
-        if self._feature_spec is None:
+        if self.feature_spec is None:
+            self.feature_spec = {}
 
             for col in X.columns:
-                self._feature_spec[col] = retrieve_feature_definition(X[col])
+                self.feature_spec[col] = retrieve_feature_definition(X[col])
 
         return self
 
@@ -63,12 +64,12 @@ class FeatureValidator(BaseEstimator, TransformerMixin):
         """
 
         # A copy to work on when transforming types
-        X_copy = X[list(self._feature_spec.keys())].copy(deep=True)
+        X_copy = X[list(self.feature_spec.keys())].copy(deep=True)
 
-        if self._feature_spec is None:
+        if self.feature_spec is None:
             raise ValueError("Please fit the transformer before applying it!")
 
-        for name, feat in self._feature_spec.items():
+        for name, feat in self.feature_spec.items():
             numeric = pd.to_numeric(X[name], errors='coerce')
             char_values = frozenset(X[name][numeric.isnull()].values)
             set_difference = char_values - feat.range.categorical_indicators
