@@ -76,11 +76,11 @@ class WoETransformer(BaseEstimator, TransformerMixin):
         """
 
         if woe_spec is not None:
-            self._woe_spec = woe_spec
+            self.woe_spec = woe_spec
 
         elif binner is not None:
             self._binner = binner
-            self._woe_spec = None
+            self.woe_spec = None
 
         else:
             raise ValueError("Either the WoE specification or the binner has to be provided.")
@@ -93,8 +93,8 @@ class WoETransformer(BaseEstimator, TransformerMixin):
         """
 
         # TODO some checking on `X` and `y` to validate them should be done
-        if self._woe_spec is None:
-            self._woe_spec = {}
+        if self.woe_spec is None:
+            self.woe_spec = {}
             self._binner.fit(X, y)
             binning_spec = self._binner.get_binning_spec()
             event = y.astype(bool)
@@ -130,7 +130,7 @@ class WoETransformer(BaseEstimator, TransformerMixin):
                         )
                     )
 
-                self._woe_spec[name] = WoESpec(
+                self.woe_spec[name] = WoESpec(
                     feature=spec.feature,
                     bins=woe_bins
                 )
@@ -146,17 +146,17 @@ class WoETransformer(BaseEstimator, TransformerMixin):
         """
 
         # A copy to work on when transforming columns
-        X_copy = X[list(self._woe_spec.keys())].copy(deep=True)
+        X_copy = X[list(self.woe_spec.keys())].copy(deep=True)
 
-        if self._woe_spec is None:
+        if self.woe_spec is None:
             raise ValueError("Please fit the transformer before applying it!")
 
-        for name, spec in self._woe_spec.items():
+        for name, spec in self.woe_spec.items():
 
             # Impute with the right WoE value
             for woe_bin in spec.bins:
                 X_copy.loc[get_mask_from_range(X[name], woe_bin.bin), name] = woe_bin.woe
 
-        print(self._woe_spec)
+        print(self.woe_spec)
         print(X_copy)
         return X_copy

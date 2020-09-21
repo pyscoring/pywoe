@@ -111,20 +111,20 @@ def _get_spec(
     """
 
     list_of_sets_required = [
-        {
+        set([
             Range(
                 numeric_range_start=sorted_thresholds[i],
                 numeric_range_end=threshold
             )
+        ])
 
-            for i, threshold in enumerate(sorted_thresholds[1:])
-        }
+        for i, threshold in enumerate(sorted_thresholds[1:])
     ] + [
-        {
+        set([
             Range(
-                categorical_indicators={char}
+                categorical_indicators=set([char])
             )
-        }
+        ])
 
         for char in categorical_indicators
     ]

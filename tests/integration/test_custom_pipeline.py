@@ -4,6 +4,7 @@ A simple test that checks whether a custom pipeline works well on one of the sta
 datasets.
 """
 
+import cattr
 import unittest
 import pprint
 
@@ -36,4 +37,5 @@ class CustomPipelineTests(unittest.TestCase):
 
     def test_fitting(self):
         self.pipeline.fit(self.X, self.y)
-        pprint.pprint(self.woe_transformer._woe_spec)
+        print(self.pipeline.transform(self.X))
+        print(self.pipeline['woe_transformer'].woe_spec['mean radius'].bins)

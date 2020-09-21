@@ -54,6 +54,7 @@ def _iteratively_merge_bins(
         p_value_threshold: float = P_VALUE_THRESHOLD
 ) -> BinningSpec:
     """
+    TODO fix the method
 
     :param x: the variable being binned
     :param y: the target variable used to determine which bins to merge
@@ -91,6 +92,14 @@ def _iteratively_merge_bins(
             )
 
             if p_value >= p_value_threshold:
+                print(
+                    'merging bins ({}, {}) - ({}, {})'.format(
+                        bins_ordered[prev_idx].numeric_range_start,
+                        bins_ordered[prev_idx].numeric_range_end,
+                        bins_ordered[idx].numeric_range_start,
+                        bins_ordered[idx].numeric_range_end
+                    )
+                )
                 new_binning.add(
                     Range(
                         numeric_range_start=min(
@@ -109,7 +118,8 @@ def _iteratively_merge_bins(
                 )
                 i += 2
 
-                if i >= len(sorted_indexes) and not bins_ordered[sorted_indexes[-1]] in new_binning:
+                # If we have skipped past the last bin, add it.
+                if i == len(sorted_indexes):
                     new_binning.add(bins_ordered[sorted_indexes[-1]])
 
             else:
@@ -127,7 +137,7 @@ def _iteratively_merge_bins(
 
     return BinningSpec(
         feature=binning_spec.feature,
-        bins=old_binning
+        bins=new_binning
     )
 
 
@@ -243,7 +253,8 @@ class DecisionTreeBinner(AbstractBinner):
         # Finally, we go through bins, including the categorical ones, and merge the ones that are not
         # stat. sign. different from neighbouring ones.
         # TODO This piece of code should be parallelised
-        self._spec = {
+        self._spec = self._initial_specs
+        """{
             name: _iteratively_merge_bins(
                 X[name],
                 y,
@@ -253,4 +264,4 @@ class DecisionTreeBinner(AbstractBinner):
             )
 
             for name in self._feature_validator.feature_spec.keys()
-        }
+        }"""

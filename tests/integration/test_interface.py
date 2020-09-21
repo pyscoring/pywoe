@@ -6,7 +6,6 @@ A simple test to test if the whole pipeline, as defined in the interface module,
 import unittest
 import pandas as pd
 
-from sklearn.datasets import load_breast_cancer
 from pywoe.interface import get_raw_data_to_woe_values_pipeline
 
 
